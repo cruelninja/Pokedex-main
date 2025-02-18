@@ -1,0 +1,33 @@
+name: Update Version
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest  # Use an Ubuntu runner
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'  # Use Node.js 16
+
+      # Step 3: Run the version update script
+      - name: Update version in manifest.json
+        run: node updateVersion.js
+
+      # Step 4: Commit the updated manifest.json
+      - name: Commit changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add manifest.json
+          git commit -m "Automated version update"
+          git push
