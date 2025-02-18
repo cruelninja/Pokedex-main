@@ -1,0 +1,38 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Popup styling */
+.battle-container {
+  width: 300px;
+  padding: 20px;
+  text-align: center;
+}
+
+input[type="text"] {
+  width: 80%;
+  padding: 8px;
+  margin: 10px 5%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Overlay styling */
+#battle-overlay {
+  font-size: 14px;
+}

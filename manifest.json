@@ -1,0 +1,56 @@
+{
+  "manifest_version": 3,
+  "name": "Pokéédex",
+  "version": "1.0.4",
+  "description": "Displays battle info (stats, evolutions, mega details) for your and opponent's Pokémon in Pokerogue.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://pokerogue.net/*",
+    "https://pokeapi.co/*"
+  ],
+  "background": {
+    "service_worker": "service_worker.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/poke_ball16.png",
+      "48": "icons/poke_ball48.png",
+      "128": "icons/poke_ball128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://pokerogue.net/*"],
+      "js": ["libs/dependency.js", "content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "ruleset_1",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  }
+}
+{
+  "branches": ["main"],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "node update-manifest-version.js ${nextRelease.version}"
+      }
+    ],
+    "@semantic-release/git"
+  ]
+}
