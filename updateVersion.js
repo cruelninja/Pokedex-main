@@ -1,3 +1,6 @@
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('./scratch');
+
 // Function to update application version
 function updateVersion(newVersion) {
     const versionKey = 'pokedexVersion';
