@@ -10,6 +10,54 @@
 *.userosscache
 *.sln.docstates
 AppData/
+Application Data/
+Cookies/
+Local Settings/
+My Documents/
+NetHood/
+PrintHood/
+Recent/
+SendTo/
+Start Menu/
+Templates/
+.dotnet/
+.gitconfig
+Calibre Library/
+Cisco Packet Tracer 8.2.0/
+Contacts/
+CrossDevice/
+Desktop/
+Documents/
+Downloads/
+Favorites/
+IntelGraphicsProfiles/
+Links/
+Music/
+NTUSER.DAT
+NTUSER.DAT*
+Nox_share/
+OneDrive/
+Pictures/
+Saved Games/
+Searches/
+Tracing/
+Untitled.ipynb
+Videos/
+d4ac4633ebd6440fa397b84f1bc94a3c.7z
+flutter/
+inittk.ini
+inst.ini
+java_error_in_studio64_*.log
+my-electron-app/
+node_modules/
+ntuser.dat.*
+nuuid.ini
+package-lock.json
+package.json
+spicetify-cli/
+sprites/
+useruid.ini
+vmlogs/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
