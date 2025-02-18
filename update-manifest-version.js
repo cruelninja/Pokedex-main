@@ -1,22 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-// Path to the manifest file
 const manifestPath = path.join(__dirname, 'manifest.json');
 
-// Read the manifest file
-const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+// Load the manifest file
+fs.readFile(manifestPath, 'utf8', (err, data) => {
+    if (err) throw err;
 
-// Split the version into parts (e.g., "1.0.0" -> ["1", "0", "0"])
-const versionParts = manifest.version.split('.');
+    const manifest = JSON.parse(data);
+    
+    // Increment version
+    const versionParts = manifest.version.split('.').map(Number);
+    versionParts[2] += 1; // Increment patch version
+    manifest.version = versionParts.join('.');
 
-// Increment the patch version (e.g., "1.0.0" -> "1.0.1")
-versionParts[2] = parseInt(versionParts[2]) + 1;
-
-// Join the parts back into a version string
-manifest.version = versionParts.join('.');
-
-// Write the updated manifest back to the file
-fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-
-console.log(`Version updated to ${manifest.version}`);
+    // Save the updated manifest
+    fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), 'utf8', (err) => {
+        if (err) throw err;
+        console.log('Manifest version updated to', manifest.version);
+    });
+});
