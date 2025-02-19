@@ -30,7 +30,6 @@
         "https://pokerogue.net/*"
       ],
       "js": [
-        "libs/dependency.js",
         "content.js"
       ],
       "css": [
