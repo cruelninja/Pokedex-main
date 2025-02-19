@@ -1,32 +1,41 @@
-const { LocalStorage } = require('node-localstorage');
-const localStorage = new LocalStorage('./scratch');
+const fs = require('fs');
+const path = require('path');
 
-// Function to update application version
-function updateVersion(newVersion) {
-    const versionKey = 'pokedexVersion';
+const manifestPath = path.join(__dirname, 'manifest.json');
 
-    // Check if the local storage has an existing version
-    const currentVersion = localStorage.getItem(versionKey);
-
-    // Compare versions and update if necessary
-    if (!currentVersion || currentVersion < newVersion) {
-        localStorage.setItem(versionKey, newVersion);
-        console.log(`Updated version to: ${newVersion}`);
-        
-        // Optionally, you can trigger other functions related to version updates
-        handleVersionUpdate(newVersion);
-    } else {
-        console.log(`Current version (${currentVersion}) is up to date.`);
+fs.readFile(manifestPath, 'utf8', (err, data) => {
+    if (err) {
+        console.error('Error reading manifest.json:', err);
+        return;
     }
-}
 
-// Function to handle necessary updates when version changes
-function handleVersionUpdate(version) {
-    // Add any specific logic needed for version updates
-    // For example, fetching new features, updating UI, etc.
-    console.log(`Applying updates for version: ${version}`);
-}
+    try {
+        const manifest = JSON.parse(data);
+        console.log("🔍 Current version:", manifest.version);
 
-// Example usage
-const newVersion = '1.0.1'; // Define the new version here
-updateVersion(newVersion);
+        if (!manifest.version) {
+            console.error('❌ Error: "version" field missing in manifest.json');
+            return;
+        }
+
+        const versionParts = manifest.version.split('.').map(Number);
+        if (versionParts.length !== 3 || versionParts.some(isNaN)) {
+            console.error('❌ Error: Invalid version format in manifest.json');
+            return;
+        }
+
+        versionParts[2] += 1; // Increment patch version
+        manifest.version = versionParts.join('.');
+
+        fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error('❌ Error writing to manifest.json:', err);
+                return;
+            }
+            console.log('✅ Version updated to:', manifest.version);
+        });
+
+    } catch (jsonErr) {
+        console.error('❌ Error parsing manifest.json:', jsonErr);
+    }
+});
