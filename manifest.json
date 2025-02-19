@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Pokéédex",
   "version": "1.0.4",
-  "description": "Displays battle info (stats, evolutions, mega details) for your and opponent's Pokémon in Pokerogue.",
+  "description": "Displays bbattle info (stats, evolutions, mega details) for your and opponent's Pokémon in Pokerogue.",
   "permissions": [
     "activeTab",
     "storage",
