@@ -32,25 +32,12 @@
     }
   ],
   "declarative_net_request": {
-    "rule_resources": [{
-      "id": "ruleset_1",
-      "enabled": true,
-      "path": "rules.json"
-    }]
-  }
-}
-{
-  "branches": ["main"],
-  "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
-    "@semantic-release/changelog",
-    [
-      "@semantic-release/exec",
+    "rule_resources": [
       {
-        "prepareCmd": "node update-manifest-version.js ${nextRelease.version}"
+        "id": "ruleset_1",
+        "enabled": true,
+        "path": "rules.json"
       }
-    ],
-    "@semantic-release/git"
-  ]
+    ]
+  }
 }
