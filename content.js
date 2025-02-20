@@ -1,53 +1,69 @@
-(function() {
-  // Create a draggable overlay for battle info if not already present.
-  let overlay = document.getElementById('battle-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.id = 'battle-overlay';
-    overlay.style.position = 'fixed';
-    overlay.style.top = '10px';
-    overlay.style.right = '10px';
-    overlay.style.zIndex = '10000';
-    overlay.style.background = 'rgba(0, 0, 0, 0.85)';
-    overlay.style.color = '#fff';
-    overlay.style.padding = '15px';
-    overlay.style.borderRadius = '8px';
-    overlay.style.boxShadow = '0 4px 10px rgba(0,0,0,0.5)';
-    overlay.style.cursor = 'move';
-    overlay.style.maxWidth = '300px';
-    overlay.style.display = 'none';
-    document.body.appendChild(overlay);
-    
-    // Make the overlay draggable.
-    overlay.addEventListener('mousedown', function(e) {
-      const offsetX = e.clientX - overlay.getBoundingClientRect().left;
-      const offsetY = e.clientY - overlay.getBoundingClientRect().top;
-      function mouseMoveHandler(e) {
-        overlay.style.top = (e.clientY - offsetY) + 'px';
-        overlay.style.left = (e.clientX - offsetX) + 'px';
+import typeChart from './typeChart.js';
+
+async function fetchPokemonData(pokemonName) {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+  if (!response.ok) throw new Error('Pokémon not found');
+  return response.json();
+}
+
+function getTypeEffectiveness(types) {
+  const weaknesses = new Set();
+  const resistances = new Set();
+  const immunities = new Set();
+
+  types.forEach(type => {
+      const info = typeChart[type];
+      if (info) {
+          info.weakTo.forEach(w => weaknesses.add(w));
+          info.resistantTo.forEach(r => resistances.add(r));
+          info.immuneTo.forEach(i => immunities.add(i));
       }
-      function mouseUpHandler() {
-        document.removeEventListener('mousemove', mouseMoveHandler);
-        document.removeEventListener('mouseup', mouseUpHandler);
-      }
-      document.addEventListener('mousemove', mouseMoveHandler);
-      document.addEventListener('mouseup', mouseUpHandler);
-    });
+  });
+
+  resistances.forEach(r => weaknesses.delete(r));
+  immunities.forEach(i => {
+      weaknesses.delete(i);
+      resistances.delete(i);
+  });
+
+  return {
+      weaknesses: Array.from(weaknesses),
+      resistances: Array.from(resistances),
+      immunities: Array.from(immunities)
+  };
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'SEARCH_POKEMON') {
+      chrome.runtime.sendMessage(
+          { type: 'FETCH_BATTLE_DATA', myPokemon: message.pokemonSearch },
+          (response) => {
+              if (response.success) {
+                  displayPokemonInfo(response.myPokemon);
+              } else {
+                  console.error("Failed to fetch Pokémon data: ", response.error);
+              }
+          }
+      );
   }
+});
 
-  // Listen for window messages from the popup.
-  window.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SHOW_BATTLE_INFO') {
-      overlay.innerHTML = event.data.html;
-      overlay.style.display = 'block';
-    }
-  });
+function displayPokemonInfo(pokemon) {
+  try {
+      const types = pokemon.types.map(t => t.type.name);
+      const effectiveness = pokemon.effectiveness;
 
-  // Optionally, listen for game events from the service worker.
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.type === 'GAME_EVENT') {
-      console.log('Received game event:', request.info);
-      // Additional logic for real-time game events could be added here.
-    }
-  });
-})();
+      const infoDiv = document.createElement('div');
+      infoDiv.innerHTML = `
+          <h2>${pokemon.name.toUpperCase()}</h2>
+          <p>Types: ${types.join(', ')}</p>
+          <p>Weaknesses: ${effectiveness.weaknesses.join(', ') || 'None'}</p>
+          <p>Resistances: ${effectiveness.resistances.join(', ') || 'None'}</p>
+          <p>Immunities: ${effectiveness.immunities.join(', ') || 'None'}</p>
+      `;
+      document.body.appendChild(infoDiv);
+  } catch (error) {
+      console.error('Error displaying Pokémon data:', error);
+  }
+}
+

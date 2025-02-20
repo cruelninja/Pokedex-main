@@ -1,53 +1,39 @@
-document.getElementById('battleButton').addEventListener('click', () => {
-  const myPokemon = document.getElementById('myPokemon').value.trim().toLowerCase();
-  const oppPokemon = document.getElementById('oppPokemon').value.trim().toLowerCase();
-  if (myPokemon && oppPokemon) {
-    chrome.runtime.sendMessage({ type: 'FETCH_BATTLE_DATA', myPokemon, oppPokemon }, (response) => {
-      if (response.success) {
-        // Create HTML content for each Pokémon
-        const myHtml = createPokemonHTML(response.myPokemon, 'Your Pokémon');
-        const oppHtml = createPokemonHTML(response.oppPokemon, 'Opponent Pokémon');
-        const combinedHTML = `<div class="battle-info">${myHtml}<hr>${oppHtml}</div>`;
-        // Post message to content script to display the overlay
-        window.postMessage({ type: 'SHOW_BATTLE_INFO', html: combinedHTML }, '*');
-      } else {
-        alert('Error: ' + response.error);
-      }
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.createElement('div');
+  const shadowRoot = container.attachShadow({ mode: 'open' });
+
+  // Fetch and apply your CSS
+  fetch(chrome.runtime.getURL('styles.css'))
+    .then(response => response.text())
+    .then(css => {
+      const styleElement = document.createElement('style');
+      styleElement.textContent = css;
+      shadowRoot.appendChild(styleElement);
+
+      // Create your popup content
+      const popupContent = document.createElement('div');
+      popupContent.innerHTML = `
+        <div class="battle-container">
+          <h2>Pokéédex</h2>
+          <input type="text" id="pokemonSearch" placeholder="Enter Pokémon name">
+          <button id="searchButton">Search</button>
+          <div id="pokemonInfo"></div>
+        </div>
+      `;
+      shadowRoot.appendChild(popupContent);
+
+      // Attach event listeners or any additional scripts here
+      const searchButton = shadowRoot.getElementById('searchButton');
+      searchButton.addEventListener('click', () => {
+        const pokemonSearch = shadowRoot.getElementById('pokemonSearch').value.trim().toLowerCase();
+        if (pokemonSearch) {
+          // Your existing fetch logic here
+        } else {
+          alert("Please enter a Pokémon name.");
+        }
+      });
     });
-  } else {
-    alert("Please enter both Pokémon names or IDs.");
-  }
+
+  document.body.appendChild(container);
 });
 
-function createPokemonHTML(pokemonObj, title) {
-  const data = pokemonObj.data;
-  const species = pokemonObj.species;
-  const evoChain = pokemonObj.evolutionChain;
-  return `
-    <h2>${title}: ${capitalizeFirstLetter(data.name)}</h2>
-    <img src="${data.sprites.front_default}" alt="${data.name}">
-    <p>Height: ${(data.height / 10).toFixed(1)} m</p>
-    <p>Weight: ${(data.weight / 10).toFixed(1)} kg</p>
-    <p>Types: ${data.types.map(t => capitalizeFirstLetter(t.type.name)).join(', ')}</p>
-    <p>Evolution: ${displayEvolutionChain(evoChain)}</p>
-  `;
-}
-
-function displayEvolutionChain(chain) {
-  // Recursively traverse the evolution chain to build a simple representation.
-  let evoHtml = '';
-  function traverse(node) {
-    evoHtml += capitalizeFirstLetter(node.species.name);
-    if (node.evolves_to && node.evolves_to.length > 0) {
-      // For simplicity, display the first evolution path.
-      evoHtml += ' ➔ ';
-      traverse(node.evolves_to[0]);
-    }
-  }
-  traverse(chain);
-  return evoHtml;
-}
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}

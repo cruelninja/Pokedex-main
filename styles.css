@@ -1,38 +1,170 @@
-body {
-  font-family: Arial, sans-serif;
+/* Global box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Force fixed dimensions on root elements */
+html, body {
+  width: 400px;
+  height: 600px;
+  min-width: 400px;
+  min-height: 600px;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
-/* Popup styling */
-.battle-container {
-  width: 300px;
-  padding: 20px;
+/* Overall body styling */
+body {
+  background: radial-gradient(circle, #222, #000);
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+/* Fixed-size Pokédex container */
+.pokedex-container {
+  width: 400px;
+  height: 600px;
+  background: linear-gradient(135deg, #555, #333);
+  border: 10px solid #b71c1c;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  overflow: hidden; /* Prevent internal scrolling */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header with fixed height and decorative logo */
+.pokedex-header {
+  height: 50px;
+  background: #b71c1c;
+  padding: 5px;
   text-align: center;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.pokedex-header .logo {
+  width: 30px;
+  height: 30px;
+}
+.pokedex-header h1 {
+  margin: 0;
+  font-size: 1.8em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
 }
 
-input[type="text"] {
-  width: 80%;
-  padding: 8px;
-  margin: 10px 5%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* Screen occupies the remaining space */
+.pokedex-screen {
+  height: calc(600px - 50px); /* Remaining height after header */
+  background: #1a1a1a;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* No scrolling */
 }
 
-button {
-  padding: 8px 12px;
-  background-color: #007bff;
-  color: white;
+/* Form styling */
+#pokemon-form {
+  display: flex;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+#pokemon-input {
+  flex: 1;
+  padding: 6px;
   border: none;
   border-radius: 4px;
+  font-size: 0.9em;
+}
+#pokemon-form button {
+  padding: 6px 12px;
+  background: #b71c1c;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.9em;
+  margin-left: 5px;
   cursor: pointer;
 }
-
-button:hover {
-  background-color: #0056b3;
+#pokemon-form button:hover {
+  background: #a31515;
 }
 
-/* Overlay styling */
-#battle-overlay {
-  font-size: 14px;
+/* Main Pokémon info card */
+.main-pokemon {
+  text-align: center;
+  padding: 10px;
+  background: #2c2c2c;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
 }
+.main-pokemon img {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+/* Evolution chain container */
+.evo-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.evo-card {
+  background: #2c2c2c;
+  padding: 4px;
+  border-radius: 8px;
+  text-align: center;
+  width: 70px;
+}
+.evo-card img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+.evo-card p {
+  margin: 3px 0 0;
+  font-size: 0.7em;
+}
+
+/* Bordered type label styles */
+.type-label {
+  display: inline-block;
+  padding: 2px 4px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  margin-right: 2px;
+  font-size: 0.8em;
+  text-transform: capitalize;
+}
+
+/* Example type-specific border colors */
+.type-label.fire { border-color: #F08030; }
+.type-label.water { border-color: #6890F0; }
+.type-label.electric { border-color: #F8D030; }
+.type-label.grass { border-color: #78C850; }
+.type-label.ice { border-color: #98D8D8; }
+.type-label.fighting { border-color: #C03028; }
+.type-label.poison { border-color: #A040A0; }
+.type-label.ground { border-color: #E0C068; }
+.type-label.flying { border-color: #A890F0; }
+.type-label.psychic { border-color: #F85888; }
+.type-label.bug { border-color: #A8B820; }
+.type-label.rock { border-color: #B8A038; }
+.type-label.ghost { border-color: #705898; }
+.type-label.dragon { border-color: #7038F8; }
+.type-label.dark { border-color: #705848; }
+.type-label.steel { border-color: #B8B8D0; }
+.type-label.fairy { border-color: #EE99AC; }
+.type-label.normal { border-color: #A8A878; }
