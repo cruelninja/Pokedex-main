@@ -28,11 +28,17 @@ async function handleUserInput(event) {
 
     // Fetch species data for evolution chain URL
     const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${data.id}`);
+    if (!speciesResponse.ok) {
+      throw new Error(`Error fetching species data: ${speciesResponse.status} - ${speciesResponse.statusText}`);
+    }
     const speciesData = await speciesResponse.json();
 
     let evolutionSprites = [];
     if (speciesData.evolution_chain && speciesData.evolution_chain.url) {
       const evoResponse = await fetch(speciesData.evolution_chain.url);
+      if (!evoResponse.ok) {
+        throw new Error(`Error fetching evolution chain: ${evoResponse.status} - ${evoResponse.statusText}`);
+      }
       const evoData = await evoResponse.json();
       const evolutionNames = parseEvolutionChain(evoData.chain); // Array of evolution names
 
