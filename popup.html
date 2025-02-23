@@ -2,29 +2,43 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <!-- Force a fixed viewport size -->
-    <meta name="viewport" content="width=400, initial-scale=1.0">
-    <title>Pokédex</title>
-    <link rel="stylesheet" href="styles.css">
-    <script type="module" defer src="main.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=400, initial-scale=1.0" />
+  <title>Pokédex</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="module" src="main.js"></script>
 </head>
 
 <body>
-    <div class="pokedex-container">
-        <div class="pokedex-header">
-            <!-- Replace with your logo or remove if not needed -->
-            <img src="PokeDex.png" alt="Logo" class="logo">
-            <h1>Pokédex</h1>
-        </div>
-        <div class="pokedex-screen">
-            <form id="pokemon-form">
-                <input type="text" id="pokemon-input" placeholder="Enter Pokémon name">
-                <button type="submit">Scan</button>
-            </form>
-            <div id="pokemon-info"></div>
-        </div>
+  <div class="pokedex-container">
+    <div class="pokedex-header">
+      <img src="PokeDex.png" alt="Logo" class="logo" />
+      <h1>Pokédex</h1>
     </div>
+    <div class="pokedex-screen">
+      <form id="pokemon-form" autocomplete="off">
+        <button type="button" id="back-button" class="back-button" style="display: none;">&#8592;</button>
+        <div class="search-container">
+          <input type="text" id="pokemon-input" placeholder="Enter Pokémon name" />
+          <span class="search-icon">🔍</span>
+          <ul id="suggestions"></ul>
+        </div>
+      </form>
+      <!-- Generation Buttons -->
+      <div id="gen-buttons">
+        <button data-gen="1">Gen I</button>
+        <button data-gen="2">Gen II</button>
+        <button data-gen="3">Gen III</button>
+        <button data-gen="4">Gen IV</button>
+        <button data-gen="5">Gen V</button>
+        <button data-gen="6">Gen VI</button>
+        <button data-gen="7">Gen VII</button>
+        <button data-gen="8">Gen VIII</button>
+      </div>
+      <div id="library"></div>
+      <div id="pokemon-info" style="display: none;"></div>
+    </div>
+  </div>
 </body>
 
 </html>
