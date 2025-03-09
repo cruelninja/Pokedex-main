@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 🔝 Shared Header -->
+    <div id="header-container"></div>
+
+    <!-- 📚 Pokémon Library -->
+    <div id="pokemon-library-wrapper">
+        <div id="pokemon-library"></div>  <!-- ✅ This must exist -->
+    </div>
+
+    <!-- ✅ Load Scripts in Correct Order -->
+    <script type="module" src="header.js"></script>
+    <script type="module" src="sidepanelLoader.js"></script>  <!-- ✅ New external loader -->
+    <script type="module" src="pokemonLibrary.js" defer></script>
+</body>
+</html>

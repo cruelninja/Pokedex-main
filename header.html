@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex Header</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 🔝 Header Section -->
+    <div id="pokedex-header" class="pokedex-header">
+        <div class="header-content">
+          <img src="PokeDex.png" alt="Pokédex Logo" class="logo">
+          <h1 class="pokedex-title">Pokédex</h1>
+        </div>
+      </div>
+
+    <!-- 🔍 Search & Dropdown Inside Header -->
+    <div class="search-and-gen-controls">
+        <select id="gen-dropdown">
+            <option value="all">All Pokémon</option>
+            <option value="1">Gen I</option>
+            <option value="2">Gen II</option>
+            <option value="3">Gen III</option>
+            <option value="4">Gen IV</option>
+            <option value="5">Gen V</option>
+            <option value="6">Gen VI</option>
+            <option value="7">Gen VII</option>
+            <option value="8">Gen VIII</option>
+            <option value="9">Gen IX</option>
+        </select>
+
+        <div class="search-container">
+            <input type="text" id="pokemon-input" placeholder="Search Pokémon">               
+        </div>
+    </div>
+</body>
+</html>
