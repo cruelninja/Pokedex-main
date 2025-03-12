@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pokéédex",
-  "version": "1.0.34791",
+  "version": "1.0.34792",
   "description": "Displays battle info (stats, evolutions, mega details) for your and opponent's Pokemon in Pokerogue.",
   "permissions": [
     "activeTab",
@@ -39,16 +39,27 @@
   "options_page": "options.html",
   "content_scripts": [
     {
-      "matches": ["https://pokerogue.net/*"],
-      "js": ["contentScript.js"],
-      "css": ["styles.css"],
+      "matches": [
+        "https://pokerogue.net/*"
+      ],
+      "js": [
+        "contentScript.js"
+      ],
+      "css": [
+        "styles.css"
+      ],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["images/*", "sprites/*"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "images/*",
+        "sprites/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "content_security_policy": {
