@@ -1,17 +1,20 @@
 {
   "manifest_version": 3,
   "name": "Pokéédex",
-  "version": "1.0.34358",
+  "version": "1.0.34359",
   "description": "Displays battle info (stats, evolutions, mega details) for your and opponent's Pokemon in Pokerogue.",
   "permissions": [
     "activeTab",
     "scripting",
     "storage",
-    "sidePanel"
+    "sidePanel",
+    "declarativeNetRequest",
+    "tabs"
   ],
   "host_permissions": [
     "https://pokerogue.net/*",
-    "https://pokeapi.co/*"
+    "https://pokeapi.co/*",
+    "https://raw.githubusercontent.com/*"
   ],
   "background": {
     "service_worker": "service_worker.js",
@@ -27,5 +30,33 @@
       "48": "Icons/poke_ball48.png",
       "128": "Icons/poke_ball128.png"
     }
-  }
+  },
+  "icons": {
+    "16": "Icons/poke_ball16.png",
+    "48": "Icons/poke_ball48.png",
+    "128": "Icons/poke_ball128.png"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["https://pokerogue.net/*"],
+      "js": ["contentScript.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["images/*", "sprites/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; img-src 'self' https://raw.githubusercontent.com https://pokeapi.co; script-src 'self'; style-src 'self' 'unsafe-inline';",
+    "sandbox": "default-src 'none'; img-src 'self';"
+  },
+  "minimum_chrome_version": "93",
+  "author": "Your Name",
+  "homepage_url": "https://yourwebsite.com",
+  "support_url": "https://yourwebsite.com/support"
 }
