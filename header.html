@@ -1,38 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex Header</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- 🔝 Header Section -->
-    <div id="pokedex-header" class="pokedex-header">
+    <header id="pokedex-header" class="pokedex-header">
         <div class="header-content">
-          <img src="PokeDex.png" alt="Pokédex Logo" class="logo">
-          <h1 class="pokedex-title">Pokédex</h1>
+            <img src="PokeDex.png" alt="Pokédex Logo" class="logo">
+            <h1 class="pokedex-title">Pokédex</h1>
         </div>
-      </div>
+    </header>
 
     <!-- 🔍 Search & Dropdown Inside Header -->
     <div class="search-and-gen-controls">
         <select id="gen-dropdown">
-            <option value="all">All Pokémon</option>
-            <option value="1">Gen I</option>
-            <option value="2">Gen II</option>
-            <option value="3">Gen III</option>
-            <option value="4">Gen IV</option>
-            <option value="5">Gen V</option>
-            <option value="6">Gen VI</option>
-            <option value="7">Gen VII</option>
-            <option value="8">Gen VIII</option>
-            <option value="9">Gen IX</option>
+            <option value="all" selected>All Pokémon</option>
+            <option value="gen1">Gen 1 (Kanto)</option>
+            <option value="gen2">Gen 2 (Johto)</option>
+            <option value="gen3">Gen 3 (Hoenn)</option>
+            <option value="gen4">Gen 4 (Sinnoh)</option>
+            <option value="gen5">Gen 5 (Unova)</option>
+            <option value="gen6">Gen 6 (Kalos)</option>
+            <option value="gen7">Gen 7 (Alola)</option>
+            <option value="gen8">Gen 8 (Galar)</option>
+            <option value="gen9">Gen 9 (Paldea)</option>
         </select>
 
         <div class="search-container">
-            <input type="text" id="pokemon-input" placeholder="Search Pokémon">               
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24">
+                    <path
+                        d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 001.48-5.34C15.33 5.01 12.31 2 8.66 2S2 5.01 2 8.66s3.01 6.66 6.66 6.66c1.61 0 3.09-.58 4.27-1.55l.27.28v.79l4.99 4.99 1.49-1.49L15.5 14zm-6.84 0c-2.65 0-4.84-2.19-4.84-4.84s2.19-4.84 4.84-4.84 4.84 2.19 4.84 4.84-2.19 4.84-4.84 4.84z" />
+                </svg>
+                <input type="text" id="pokemon-input" placeholder="Search Pokémon">
+            </div>
+
+            <!-- 🔽 Search Suggestions Box -->
+            <div id="search-suggestions" class="suggestions-box"></div>
         </div>
     </div>
+
+
+    <script type="module" src="header.js"></script>
 </body>
+
 </html>

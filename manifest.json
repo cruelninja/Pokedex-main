@@ -6,21 +6,26 @@
   "permissions": [
     "activeTab",
     "scripting",
-    "storage"
+    "storage",
+    "sidePanel"
   ],
   "host_permissions": [
-    "https://pokerogue.net/*"
+    "https://pokerogue.net/*",
+    "https://pokeapi.co/*"
   ],
   "background": {
-    "service_worker": "background.js",
+    "service_worker": "service_worker.js",
     "type": "module"
   },
+  "side_panel": {
+    "default_path": "SidePanel.html"
+  },
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "SidePanel.html",
     "default_icon": {
-      "16": "icons/poke_ball16.png",
-      "48": "icons/poke_ball48.png",
-      "128": "icons/poke_ball128.png"
+      "16": "Icons/poke_ball16.png",
+      "48": "Icons/poke_ball48.png",
+      "128": "Icons/poke_ball128.png"
     }
   }
 }

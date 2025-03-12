@@ -14,29 +14,31 @@ function renderPokemonDetails(pokemon) {
   const sprite =
     sprites.other?.["official-artwork"]?.front_default ||
     sprites.front_default ||
-    "default-pokemon.png";
+    "sprites/pokemon/default-pokemon.png"; // Ensure this path matches your project structure
 
   // ✅ Create type labels
-  const typeLabels = types
-    .map(
-      (type) =>
-        `<span class="type-label ${type.type.name}">${type.type.name}</span>`
-    )
-    .join(" ");
+  const typeLabels = types && types.length
+    ? types
+        .map(
+          (type) =>
+            `<span class="type-label ${type.type.name}">${type.type.name}</span>`
+        )
+        .join(" ")
+    : "<span>No types available</span>";
 
   // ✅ Create stat rows
-  const statRows = stats
-    .map(
-      (stat) => `
+  const statRows = stats && stats.length
+    ? stats
+        .map(
+          (stat) => `
       <div class="stat-row">
-        <span class="stat-name">${stat.stat.name
-          .replace(/-/g, " ")
-          .toUpperCase()}:</span>
+        <span class="stat-name">${stat.stat.name.replace(/-/g, " ").toUpperCase()}:</span>
         <span class="stat-value">${stat.base_stat}</span>
       </div>
     `
-    )
-    .join("");
+        )
+        .join("")
+    : "<div>No stats available</div>";
 
   const pokemonInfo = document.getElementById("pokemon-info");
   if (!pokemonInfo) {
@@ -52,7 +54,7 @@ function renderPokemonDetails(pokemon) {
           class="pokemon-image" 
           src="${sprite}" 
           alt="${name} official artwork" 
-          onerror="this.onerror=null;this.src='default-pokemon.png'"
+          onerror="this.onerror=null;this.src='sprites/pokemon/default-pokemon.png'"
         >
       </div>
       <h2 class="pokemon-name">${name.toUpperCase()} (#${id})</h2>

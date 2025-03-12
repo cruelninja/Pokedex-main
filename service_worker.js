@@ -1,60 +1,146 @@
-import "./libs/pokeapi.js";
-import "./libs/pokerogueutils.js";
-import "./libs/utils.js";
-import "./libs/enums/Nature.js";
-import "./libs/enums/Stat.js";
-import "./libs/enums/WeatherType.js";
+// Use ES module import instead of importScripts
+import typeChart from "./typeChart.js";
 
+// ✅ Local Cache for Pokémon Data
+const pokemonCache = new Map();
+const pokemonList = [];
+
+// ✅ Fetch the Pokémon list from PokéAPI
+async function fetchPokemonList() {
+  try {
+    const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
+    const data = await response.json();
+    data.results.forEach((pokemon, index) => {
+      pokemonList.push({ name: pokemon.name, number: index + 1 });
+    });
+
+    // Store in Chrome storage for persistence
+    chrome.storage.local.set({ pokemonList });
+    console.log("✅ Pokémon list stored in Chrome storage.");
+  } catch (error) {
+    console.error("❌ Error fetching Pokémon list:", error);
+  }
+}
+
+// ✅ Fetch Pokémon details (with caching)
+async function fetchPokemonData(pokemonName) {
+  const lowerName = pokemonName.toLowerCase();
+  if (pokemonCache.has(lowerName)) {
+    console.log(`✅ Loaded from cache: ${lowerName}`);
+    return { success: true, myPokemon: pokemonCache.get(lowerName) };
+  }
+
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${lowerName}`);
+    if (!response.ok) throw new Error("Pokémon not found");
+
+    const data = await response.json();
+    pokemonCache.set(lowerName, data); // ✅ Cache the data
+
+    return { success: true, myPokemon: data };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+// ✅ Get type effectiveness based on type chart
+function getTypeEffectiveness(types) {
+  const weaknesses = new Set();
+  const resistances = new Set();
+  const immunities = new Set();
+
+  types.forEach((type) => {
+    const info = typeChart[type];
+    if (info) {
+      info.weakTo.forEach((w) => weaknesses.add(w));
+      info.resistantTo.forEach((r) => resistances.add(r));
+      info.immuneTo.forEach((i) => immunities.add(i));
+    }
+  });
+
+  // Remove resistances from weaknesses and immunities from all
+  resistances.forEach((r) => weaknesses.delete(r));
+  immunities.forEach((i) => {
+    weaknesses.delete(i);
+    resistances.delete(i);
+  });
+
+  return {
+    weaknesses: Array.from(weaknesses),
+    resistances: Array.from(resistances),
+    immunities: Array.from(immunities),
+  };
+}
+
+// ✅ Fetch additional Pokémon details (species & evolution chain)
+async function fetchSpeciesAndEvolution(pokemonId) {
+  try {
+    const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`);
+    if (!speciesResponse.ok) throw new Error("Species data not found");
+
+    const speciesData = await speciesResponse.json();
+    const evoChainUrl = speciesData.evolution_chain?.url;
+
+    let evoData = null;
+    if (evoChainUrl) {
+      const evoResponse = await fetch(evoChainUrl);
+      if (evoResponse.ok) evoData = await evoResponse.json();
+    }
+
+    return { species: speciesData, evolutionChain: evoData };
+  } catch (error) {
+    console.error("❌ Error fetching species/evolution data:", error);
+    return { species: null, evolutionChain: null };
+  }
+}
+
+// ✅ Handle messages from extension scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === "FETCH_BATTLE_DATA") {
-    (async () => {
-      try {
-        const fetchPokemonData = async (name) => {
-          const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-          if (!res.ok) throw new Error(`Pokémon ${name} not found`);
-          return res.json();
-        };
-
-        const fetchSpeciesData = async (id) => {
-          const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`);
-          if (!res.ok) throw new Error(`Species data not found for Pokémon ID ${id}`);
-          return res.json();
-        };
-
-        const fetchEvolutionChain = async (url) => {
-          if (!url) return null; // Some Pokémon don’t have evolution chains
-          const res = await fetch(url);
-          if (!res.ok) throw new Error("Evolution chain data not found");
-          return res.json();
-        };
-
-        // Fetch Pokémon and species data
-        const [myData, oppData] = await Promise.all([
+  (async () => {
+    try {
+      if (request.type === "GET_POKEMON_LIST") {
+        // Retrieve the list from Chrome storage
+        const { pokemonList } = await chrome.storage.local.get("pokemonList");
+        sendResponse(pokemonList || []);
+      } else if (request.type === "FETCH_BATTLE_DATA") {
+        // Fetch both Pokémon data
+        const [myPokemonResponse, oppPokemonResponse] = await Promise.all([
           fetchPokemonData(request.myPokemon),
           fetchPokemonData(request.oppPokemon),
         ]);
 
-        const [mySpecies, oppSpecies] = await Promise.all([
-          fetchSpeciesData(myData.id),
-          fetchSpeciesData(oppData.id),
-        ]);
+        if (myPokemonResponse.success && oppPokemonResponse.success) {
+          // Get type effectiveness
+          const myTypes = myPokemonResponse.myPokemon.types.map((t) => t.type.name);
+          myPokemonResponse.myPokemon.effectiveness = getTypeEffectiveness(myTypes);
 
-        // Fetch evolution chains
-        const [myEvoChain, oppEvoChain] = await Promise.all([
-          fetchEvolutionChain(mySpecies.evolution_chain?.url),
-          fetchEvolutionChain(oppSpecies.evolution_chain?.url),
-        ]);
+          const oppTypes = oppPokemonResponse.myPokemon.types.map((t) => t.type.name);
+          oppPokemonResponse.myPokemon.effectiveness = getTypeEffectiveness(oppTypes);
 
-        sendResponse({
-          success: true,
-          myPokemon: { data: myData, species: mySpecies, evolutionChain: myEvoChain },
-          oppPokemon: { data: oppData, species: oppSpecies, evolutionChain: oppEvoChain },
-        });
-      } catch (error) {
-        sendResponse({ success: false, error: error.message });
+          // Fetch species & evolution data
+          const [myExtraData, oppExtraData] = await Promise.all([
+            fetchSpeciesAndEvolution(myPokemonResponse.myPokemon.id),
+            fetchSpeciesAndEvolution(oppPokemonResponse.myPokemon.id),
+          ]);
+
+          sendResponse({
+            success: true,
+            myPokemon: { ...myPokemonResponse.myPokemon, ...myExtraData },
+            oppPokemon: { ...oppPokemonResponse.myPokemon, ...oppExtraData },
+          });
+        } else {
+          sendResponse({ success: false, error: "Pokémon data not found" });
+        }
       }
-    })();
+    } catch (error) {
+      sendResponse({ success: false, error: error.message });
+    }
+  })();
 
-    return true; // Keeps the messaging channel open for async response
-  }
+  return true; // Keeps message channel open for async response
 });
+
+// ✅ Initialize Pokémon list on service worker startup
+fetchPokemonList();

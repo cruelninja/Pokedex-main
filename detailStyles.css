@@ -1,311 +1,17 @@
 /* =========================================================
-   🌐 GLOBAL STYLES - Modern & Clean Design
+   🌐 GLOBAL STYLES - Modern & Sleek Pokédex UI
 ======================================================== */
 :root {
+  /* Color Palette */
   --primary-red: #E3350D;
   --accent-yellow: #FFDE00;
-  --dark-bg: #1A1A1A;
+  --dark-bg: #1E1E1E;
   --card-bg: #2B2B2B;
-  --text-primary: #FFFFFF;
-  --text-secondary: #B0B0B0;
   --border-light: rgba(255, 255, 255, 0.15);
-  --shadow-dark: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
+  --text-primary: #FFFFFF;
+  --text-secondary: #C7C7C7;
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--dark-bg);
-  color: var(--text-primary);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-  padding: 1rem;
-}
-
-/* =========================================================
-   📜 POKÉMON DETAIL CONTAINER - Centered Layout
-======================================================== */
-#pokemon-info {
-  flex-grow: 1;
-  max-height: calc(100vh - 60px);
-  overflow-y: auto;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  background: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: var(--shadow-dark);
-}
-
-/* =========================================================
-   🎨 SPRITE & GENERAL INFO - High Quality Display
-======================================================== */
-.pokemon-detail-container {
-  width: 100%;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sprite-wrapper {
-  width: 140px;
-  height: 140px;
-  margin-bottom: 1rem;
-  background: var(--card-bg);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
-}
-
-.pokemon-image {
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-.pokemon-name {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--accent-yellow);
-  letter-spacing: 1.2px;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-}
-
-/* =========================================================
-   🏷️ TYPE LABELS - Small & Rounded
-======================================================== */
-.type-container {
-  display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 0.5rem;
-}
-
-.type-label {
-  padding: 0.5rem 1rem;
-  border-radius: 14px;
-  font-size: 0.9rem;
-  text-transform: capitalize;
-  font-weight: 600;
-  color: #fff;
-  background: var(--card-bg);
-  border: 2px solid var(--border-light);
-}
-
-/* =========================================================
-   📊 STATS SECTION - Modern & Readable
-======================================================== */
-.stats-container {
-  width: 100%;
-  padding: 1.5rem;
-  margin-top: 1.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  box-shadow: var(--shadow-dark);
-}
-
-.stats-container h3 {
-  font-size: 1.4rem;
-  color: var(--accent-yellow);
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.8rem 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.stat-row:last-child {
-  border-bottom: none;
-}
-
-.stat-name {
-  color: var(--text-secondary);
-}
-
-.stat-value {
-  color: var(--text-primary);
-}
-
-/* =========================================================
-   🔁 EVOLUTION, MEGA & ALT FORMS - Vertical & Centered
-======================================================== */
-.evo-container,
-.mega-evo-container,
-.alt-forms-container {
-  width: 100%;
-  padding: 1.5rem;
-  margin-top: 2rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  box-shadow: var(--shadow-dark);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.evo-container h3,
-.mega-evo-container h3,
-.alt-forms-container h3 {
-  text-align: center;
-  font-size: 1.4rem;
-  color: var(--accent-yellow);
-  margin-bottom: 1rem;
-}
-
-/* ✅ Centered Evolution, Mega & Alt Form Chains */
-.evo-chain,
-.mega-evo-chain,
-.alt-forms-chain {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-/* ✅ Evolution Items - Perfectly Centered */
-.evo-item,
-.mega-evo-item,
-.alt-form-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transition: transform 0.2s ease-in-out;
-}
-
-.evo-item:hover,
-.mega-evo-item:hover,
-.alt-form-item:hover {
-  transform: scale(1.08);
-}
-
-.evo-item img,
-.mega-evo-item img,
-.alt-form-item img {
-  width: 100px;
-  height: 100px;
-  object-fit: contain;
-  border-radius: 50%;
-  background: var(--card-bg);
-  padding: 6px;
-  border: 2px solid var(--accent-yellow);
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.15);
-}
-
-.evo-name,
-.mega-evo-name,
-.alt-form-name {
-  margin-top: 0.6rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-align: center;
-}
-
-/* ✅ Evolution Arrows with Spacing */
-.evo-arrow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 1.6rem;
-  color: var(--text-secondary);
-  text-align: center;
-  margin: 10px 0;
-}
-
-/* ✅ Evolution Level - Positioned Properly */
-.evo-level {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: var(--accent-yellow);
-  margin-bottom: 8px;
-  text-align: center;
-  letter-spacing: 1px;
-}
-
-/* ✅ Bidirectional Arrow for Mega Evolutions */
-.mega-evo-arrow {
-  font-size: 1.6rem;
-  color: var(--text-secondary);
-  text-align: center;
-  margin: 10px 0;
-}
-
-/* =========================================================
-   🎨 SCROLLBAR - Styled Like Side Panel
-======================================================== */
-#pokemon-info::-webkit-scrollbar {
-  width: 6px;
-}
-
-#pokemon-info::-webkit-scrollbar-thumb {
-  background: var(--primary-red);
-  border-radius: 5px;
-  border: 2px solid var(--dark-bg);
-  transition: background 0.3s ease-in-out;
-}
-
-#pokemon-info::-webkit-scrollbar-thumb:hover {
-  background: #ff5540;
-}
-
-#pokemon-info::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.12);
-}
-
-/* =========================================================
-   📱 RESPONSIVE DESIGN - Mobile Friendly
-======================================================== */
-@media (max-width: 480px) {
-  #pokemon-info {
-    padding: 1.2rem;
-  }
-
-  .pokemon-name {
-    font-size: 1.6rem;
-  }
-
-  .stats-container,
-  .evo-container,
-  .mega-evo-container,
-  .alt-forms-container {
-    padding: 1.2rem;
-  }
-
-  .evo-item img,
-  .mega-evo-item img,
-  .alt-form-item img {
-    width: 85px;
-    height: 85px;
-  }
-}
-
-/* =========================================================
-   🎨 TYPE COLORS - Official Pokémon Palette
-======================================================== */
-:root {
+  /* Type Colors */
   --type-normal: #A8A77A;
   --type-fire: #EE8130;
   --type-water: #6390F0;
@@ -324,10 +30,116 @@ body {
   --type-dark: #705746;
   --type-steel: #B7B7CE;
   --type-fairy: #D685AD;
+
+  /* Spacing */
+  --base-padding: 1rem;
+  --small-padding: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
 /* =========================================================
-   🏷️ TYPE LABELS - Now with Colors!
+   🔴 HEADER - Modern Gradient Bar
+======================================================== */
+.pokedex-header {
+  background: linear-gradient(145deg, var(--primary-red), #C1272D);
+  padding: calc(var(--base-padding) * 1.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.25));
+}
+
+.pokedex-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  text-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================================
+   📜 POKÉMON DETAIL CONTAINER - Centered Layout
+======================================================== */
+#pokemon-info {
+  flex-grow: 1;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* =========================================================
+   🎨 DETAIL CONTENT - Sprite & General Info
+======================================================== */
+.pokemon-detail-container {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Reduced sprite size for smaller images */
+.sprite-wrapper {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 1rem;
+  background: var(--card-bg);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.pokemon-image {
+  max-width: 90%;
+  height: auto;
+  object-fit: contain;
+}
+
+.pokemon-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  letter-spacing: 1.2px;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* =========================================================
+   🏷️ TYPE LABELS - Stylish and Readable
 ======================================================== */
 .type-container {
   display: flex;
@@ -345,24 +157,110 @@ body {
   font-weight: 600;
   color: #fff;
   border: 2px solid var(--border-light);
+  transition: transform 0.2s ease-in-out;
 }
 
-/* 🎨 Assigning Background & Border Colors to Types */
-.type-label.normal { background: var(--type-normal); border-color: var(--type-normal); }
-.type-label.fire { background: var(--type-fire); border-color: var(--type-fire); }
-.type-label.water { background: var(--type-water); border-color: var(--type-water); }
-.type-label.electric { background: var(--type-electric); border-color: var(--type-electric); }
-.type-label.grass { background: var(--type-grass); border-color: var(--type-grass); }
-.type-label.ice { background: var(--type-ice); border-color: var(--type-ice); }
-.type-label.fighting { background: var(--type-fighting); border-color: var(--type-fighting); }
-.type-label.poison { background: var(--type-poison); border-color: var(--type-poison); }
-.type-label.ground { background: var(--type-ground); border-color: var(--type-ground); }
-.type-label.flying { background: var(--type-flying); border-color: var(--type-flying); }
-.type-label.psychic { background: var(--type-psychic); border-color: var(--type-psychic); }
-.type-label.bug { background: var(--type-bug); border-color: var(--type-bug); }
-.type-label.rock { background: var(--type-rock); border-color: var(--type-rock); }
-.type-label.ghost { background: var(--type-ghost); border-color: var(--type-ghost); }
-.type-label.dragon { background: var(--type-dragon); border-color: var(--type-dragon); }
-.type-label.dark { background: var(--type-dark); border-color: var(--type-dark); }
-.type-label.steel { background: var(--type-steel); border-color: var(--type-steel); }
-.type-label.fairy { background: var(--type-fairy); border-color: var(--type-fairy); }
+.type-label:hover {
+  transform: scale(1.1);
+}
+
+/* =========================================================
+   📊 STATS SECTION - Modern and Readable
+======================================================== */
+.stats-container {
+  width: 100%;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: var(--shadow-dark);
+}
+
+/* =========================================================
+   🎨 MEGA EVOLUTIONS SECTION - Styling (Updated Arrow)
+======================================================== */
+.mega-evo-chain {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.mega-evo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px; /* Adjust width as needed */
+}
+
+.mega-evo-item img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.mega-evo-name {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.mega-evo-arrow {
+  display: inline-block;
+  transform: rotate(90deg); /* Rotate the arrow to be horizontal */
+  font-size: 1.5rem; /* Adjust size as needed */
+  color: var(--accent-yellow);
+}
+
+
+/* =========================================================
+   🎨 SCROLLBAR - Smooth and Modern
+======================================================== */
+#pokemon-info::-webkit-scrollbar {
+  width: 6px;
+}
+
+#pokemon-info::-webkit-scrollbar-thumb {
+  background: var(--primary-red);
+  border-radius: 5px;
+  border: 2px solid var(--dark-bg);
+  transition: background 0.3s ease-in-out;
+}
+
+#pokemon-info::-webkit-scrollbar-thumb:hover {
+  background: #ff5540;
+}
+
+/* =========================================================
+   📱 RESPONSIVE DESIGN - Mobile-Friendly
+======================================================== */
+@media (max-width: 600px) {
+  #header-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .back-button {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .back-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #pokemon-info {
+    padding: 1rem;
+    margin: 0.75rem;
+  }
+
+  .pokemon-detail-container {
+    max-width: 90%;
+  }
+}

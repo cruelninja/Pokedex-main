@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- ✅ Updated CSP for Security & API Access -->
+  <!-- Updated CSP for Security & API Access -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self';
@@ -16,68 +15,33 @@
   ">
 
   <title>Pokédex Details</title>
+  <link rel="stylesheet" href="detailStyles.css" />
 
-  <!-- ✅ Styles -->
-  <link rel="stylesheet" href="detailStyles.css">
-
-  <!-- ✅ JavaScript Modules (Defer Execution for Performance) -->
+  <!-- Defer JavaScript modules for performance -->
   <script type="module" src="pokemonDetail.js" defer></script>
   <script type="module" src="header.js" defer></script>
 </head>
-
 <body>
-  <!-- ✅ Header -->
-  <header id="header-container" role="banner"></header>
-
-  <!-- ✅ Pokémon Details Container -->
-  <main id="pokemon-info" role="region" aria-label="Pokémon Details">
-
-    <div class="sprite-wrapper">
-      <img class="pokemon-image" src="default-pokemon.png" alt="Pokémon Image" aria-hidden="true">
+  <!-- Header: Minimal design, centered logo + title -->
+  <header id="header-container" class="pokedex-header" role="banner">
+    <div class="header-content">
+      <img src="PokeDex.png" alt="Pokédex Logo" class="logo" />
+      <h1 class="pokedex-title">Pokédex</h1>
     </div>
+  </header>
 
-    <h2 class="pokemon-name" role="heading" aria-level="2">Loading Pokémon...</h2>
-
-    <div class="type-container" role="group" aria-label="Pokémon Types"></div>
-
-    <!-- ✅ Stats Section -->
-    <section class="stats-container" role="region" aria-labelledby="stats-title">
-      <h3 id="stats-title">Base Stats</h3>
-      <div class="stat-row"><span class="stat-name">HP:</span><span class="stat-value"></span></div>
-      <div class="stat-row"><span class="stat-name">Attack:</span><span class="stat-value"></span></div>
-      <div class="stat-row"><span class="stat-name">Defense:</span><span class="stat-value"></span></div>
-      <div class="stat-row"><span class="stat-name">Sp. Atk:</span><span class="stat-value"></span></div>
-      <div class="stat-row"><span class="stat-name">Sp. Def:</span><span class="stat-value"></span></div>
-      <div class="stat-row"><span class="stat-name">Speed:</span><span class="stat-value"></span></div>
-    </section>
-
-    <!-- ✅ Evolution Section -->
-    <section class="evo-container" role="region" aria-labelledby="evo-title">
-      <h3 id="evo-title">Evolutions</h3>
-      <div class="evo-chain"></div>
-    </section>
-
-    <!-- ✅ Mega Evolutions Section -->
-    <section class="mega-evo-container" role="region" aria-labelledby="mega-evo-title">
-      <h3 id="mega-evo-title">Mega Evolutions</h3>
-      <div class="mega-evo-chain"></div>
-    </section>
-
-    <!-- ✅ Alternative Forms Section -->
-    <section class="alt-forms-container" role="region" aria-labelledby="alt-forms-title">
-      <h3 id="alt-forms-title">Alternative Forms</h3>
-      <div class="alt-forms-chain"></div>
-    </section>
-
+  <!-- Main Content: Pokémon Details -->
+  <main id="pokemon-info" role="region" aria-label="Pokémon Details">
+    <div class="pokemon-detail-loading">
+      Loading Pokémon...
+    </div>
   </main>
 
-  <!-- ✅ No JavaScript Warning -->
+  <!-- No JavaScript Warning -->
   <noscript>
-    <p style="color: red; text-align: center; font-size: 1.2rem;">
+    <p class="noscript-warning" style="color: red; text-align: center; font-size: 1.2rem;">
       ⚠️ JavaScript is required for this page to function properly.
     </p>
   </noscript>
-
 </body>
-
 </html>
