@@ -1,0 +1,11 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Specify file types that are binary to prevent Git from modifying them
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.zip binary
+*.gz binary
