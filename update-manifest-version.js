@@ -14,21 +14,20 @@ async function readManifest() {
   }
 }
 
-// Function to update the version
+// Function to increment the patch version (X.Y.Z -> X.Y.(Z+1))
 function incrementVersion(version) {
   let versionParts = version.split('.').map(Number);
 
-  if (versionParts.length < 2 || versionParts.some(isNaN)) {
-    throw new Error('Invalid version format. Expected "X.Y"');
+  if (versionParts.length < 3 || versionParts.some(isNaN)) {
+    throw new Error('Invalid version format. Expected "X.Y.Z"');
   }
 
-  let [major, minor] = versionParts;
+  let [major, minor, patch] = versionParts;
 
-  // If minor reaches 9, reset to 0 and increment major
-  minor = minor >= 9 ? 0 : minor + 1;
-  major = minor === 0 ? major + 1 : major;
+  // Increment only the patch version
+  patch++;
 
-  return `${major}.${minor}`;
+  return `${major}.${minor}.${patch}`;
 }
 
 // Function to write the updated manifest file
