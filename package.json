@@ -1,0 +1,13 @@
+{
+    "name": "pokedex-app",
+    "version": "1.0.1",
+    "dependencies": {
+        "node-localstorage": "^3.0.5"
+    },
+    "devDependencies": {
+        "auto-version-js": "^0.3.10"
+    },
+    "scripts": {
+        "bump": "auto-version --patch && node syncVersion.js"
+    }
+}

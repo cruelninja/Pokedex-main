@@ -52,8 +52,6 @@ my-electron-app/
 node_modules/
 ntuser.dat.*
 nuuid.ini
-package-lock.json
-package.json
 spicetify-cli/
 sprites/
 !sprites/
