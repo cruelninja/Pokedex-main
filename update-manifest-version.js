@@ -18,7 +18,10 @@ async function readManifest() {
 function incrementVersion(version) {
   let versionParts = version.split('.').map(Number);
 
-  if (versionParts.length < 3 || versionParts.some(isNaN)) {
+  if (versionParts.length === 2) {
+    // If version is X.Y, assume Z = 0
+    versionParts.push(0);
+  } else if (versionParts.length !== 3 || versionParts.some(isNaN)) {
     throw new Error('Invalid version format. Expected "X.Y.Z"');
   }
 
@@ -29,6 +32,7 @@ function incrementVersion(version) {
 
   return `${major}.${minor}.${patch}`;
 }
+
 
 // Function to write the updated manifest file
 async function writeManifest(manifest) {
