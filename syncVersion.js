@@ -7,14 +7,22 @@ const manifestPath = path.join(__dirname, 'manifest.json');
 async function syncVersions() {
   try {
     // Read package.json
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
+    const packageJsonData = await fs.readFile(packageJsonPath, 'utf8');
+    const packageJson = JSON.parse(packageJsonData);
+
     if (!packageJson.version) {
-      throw new Error('Version not found in package.json');
+      throw new Error('❌ Version field missing in package.json');
     }
 
     // Read manifest.json
-    const manifestJson = JSON.parse(await fs.readFile(manifestPath, 'utf8'));
-    
+    const manifestJsonData = await fs.readFile(manifestPath, 'utf8');
+    const manifestJson = JSON.parse(manifestJsonData);
+
+    if (manifestJson.version === packageJson.version) {
+      console.log('✅ manifest.json is already up to date.');
+      return;
+    }
+
     // Update manifest version to match package.json
     manifestJson.version = packageJson.version;
 
