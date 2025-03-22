@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Pokéédex",
+  "name": "Pokédex",
   "version": "1.0.0",
-  "description": "Displays battle info (stats, evolutions, mega details) for your and opponent's Pokemon in Pokerogue.",
+  "description": "Displays battle info (stats, evolutions, mega details) for your and opponent's Pokémon in Pokerogue.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -63,11 +63,12 @@
     }
   ],
   "content_security_policy": {
-    "extension_pages": "default-src 'self'; img-src 'self' https://raw.githubusercontent.com https://pokeapi.co; script-src 'self'; style-src 'self' 'unsafe-inline';",
-    "sandbox": "default-src 'none'; img-src 'self';"
+    "extension_pages": "default-src 'self'; connect-src 'self' https://pokeapi.co; img-src 'self' https://raw.githubusercontent.com https://pokeapi.co; script-src 'self'; style-src 'self' 'unsafe-inline';",
+    "sandbox": "sandbox allow-scripts; object-src 'none';"
   },
-  "minimum_chrome_version": "93",
-  "author": "Your Name",
-  "homepage_url": "https://yourwebsite.com",
-  "support_url": "https://yourwebsite.com/support"
+"sandbox": {
+  "pages": [
+    "sandbox.html"
+  ]
+}
 }

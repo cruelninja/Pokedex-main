@@ -196,46 +196,143 @@ body {
 }
 
 /* =========================================================
-   🎴 POKÉMON CARDS
+   🎴 POKÉMON CARDS - Minimal, Vertical Format
 ======================================================== */
 .pokemon-card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: var(--small-padding);
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center;
+  background: var(--dark-bg);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  transition: background var(--transition-speed), transform var(--transition-speed);
 }
 
 .pokemon-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  background: var(--card-bg);
+  transform: translateY(-2px);
 }
 
+/* Remove underline from clickable cards */
+.pokemon-card-link {
+  text-decoration: none;
+}
+
+/* Info section: Image on top, name/number below */
+.pokemon-card .pokemon-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Pokémon image: larger for vertical layout */
 .pokemon-card img {
-  width: 100%;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   object-fit: contain;
-  filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.4));
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.4));
 }
 
-.pokemon-card p {
-  margin-top: 0.5rem;
-  font-size: 1rem;
+/* Name container: a block-level element to center text */
+.pokemon-card .pokemon-name-container {
   text-align: center;
-  color: var(--text-primary);
+}
+
+/* Name styling */
+.pokemon-card .pokemon-name {
   font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  text-transform: capitalize;
+  text-decoration: none;
+}
+
+/* Pokémon number styling */
+.pokemon-card .pokemon-number {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+/* Types section below the info */
+.pokemon-card .pokemon-types {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap; /* Wrap if needed */
+  justify-content: center;
+  font-size: 0.85rem;
   text-transform: capitalize;
 }
 
-/* Highlight Effect for Search */
-.highlight {
-  background-color: var(--accent-yellow);
-  color: var(--dark-bg);
-  padding: 0 2px;
-  border-radius: 3px;
+/* Default type badge style (if no specific type matches) */
+.pokemon-card .pokemon-types span {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: var(--text-primary);
+  text-decoration: none;
 }
+
+/* Type-specific colors */
+.pokemon-card .pokemon-types .type-grass {
+  background-color: #78C850;
+}
+.pokemon-card .pokemon-types .type-poison {
+  background-color: #A040A0;
+}
+.pokemon-card .pokemon-types .type-fire {
+  background-color: #F08030;
+}
+.pokemon-card .pokemon-types .type-water {
+  background-color: #6890F0;
+}
+.pokemon-card .pokemon-types .type-electric {
+  background-color: #F8D030;
+}
+.pokemon-card .pokemon-types .type-psychic {
+  background-color: #F85888;
+}
+.pokemon-card .pokemon-types .type-ice {
+  background-color: #98D8D8;
+}
+.pokemon-card .pokemon-types .type-dragon {
+  background-color: #7038F8;
+}
+.pokemon-card .pokemon-types .type-dark {
+  background-color: #705848;
+}
+.pokemon-card .pokemon-types .type-fairy {
+  background-color: #EE99AC;
+}
+.pokemon-card .pokemon-types .type-normal {
+  background-color: #A8A878;
+}
+.pokemon-card .pokemon-types .type-fighting {
+  background-color: #C03028;
+}
+.pokemon-card .pokemon-types .type-flying {
+  background-color: #A890F0;
+}
+.pokemon-card .pokemon-types .type-bug {
+  background-color: #A8B820;
+}
+.pokemon-card .pokemon-types .type-rock {
+  background-color: #B8A038;
+}
+.pokemon-card .pokemon-types .type-ground {
+  background-color: #E0C068;
+}
+.pokemon-card .pokemon-types .type-ghost {
+  background-color: #705898;
+}
+.pokemon-card .pokemon-types .type-steel {
+  background-color: #B8B8D0;
+}
+
 
 /* =========================================================
    🎨 SCROLLBAR - Smooth & Modern

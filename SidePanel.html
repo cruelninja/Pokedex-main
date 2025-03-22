@@ -3,26 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokédex - Side Panel</title>
+    <title>Pokédex</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <!-- Shared Header (can include navigation and search) -->
-    <header id="header-container">
-      <!-- Header content or injected search input -->
+    <!-- Header Section -->
+    <header id="pokedex-header" class="pokedex-header">
+      <div class="header-content">
+        <img src="PokeDex.png" alt="Pokédex Logo" class="logo" />
+        <h1 class="pokedex-title">Pokédex</h1>
+      </div>
     </header>
 
-    <!-- Main Content -->
-    <main id="main-content">
-      <div id="pokemon-library-wrapper">
-        <div id="pokemon-library"></div>
-        <div id="loading-spinner" class="hidden">Loading...</div>
+    <!-- Search & Generation Controls on the Side Panel -->
+    <div class="search-and-gen-controls">
+      <!-- Generation Dropdown (now centralized in the side panel) -->
+      <div class="generation-dropdown-container">
+        <select id="gen-dropdown">
+          <option value="all" selected>All Pokémon</option>
+          <option value="1">Gen 1 (Kanto)</option>
+          <option value="2">Gen 2 (Johto)</option>
+          <option value="3">Gen 3 (Hoenn)</option>
+          <option value="4">Gen 4 (Sinnoh)</option>
+          <option value="5">Gen 5 (Unova)</option>
+          <option value="6">Gen 6 (Kalos)</option>
+          <option value="7">Gen 7 (Alola)</option>
+          <option value="8">Gen 8 (Galar)</option>
+          <option value="9">Gen 9 (Paldea)</option>
+        </select>
       </div>
-    </main>
 
-    <!-- Load Scripts in Correct Order -->
-    <script type="module" src="headerLoader.js"></script>
-    <script type="module" src="sidepanelLoader.js"></script>
-    <script type="module" src="pokemonLibrary.js"></script>
+      <!-- Search Box -->
+      <div class="search-container">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24">
+            <path
+              d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 001.48-5.34C15.33 5.01 12.31 2 8.66 2S2 5.01 2 8.66s3.01 6.66 6.66 6.66c1.61 0 3.09-.58 4.27-1.55l.27.28v.79l4.99 4.99 1.49-1.49L15.5 14zm-6.84 0c-2.65 0-4.84-2.19-4.84-4.84s2.19-4.84 4.84-4.84 4.84 2.19 4.84 4.84-2.19 4.84-4.84 4.84z"
+            />
+          </svg>
+          <input type="text" id="pokemon-input" placeholder="Search Pokémon..." />
+        </div>
+
+        <!-- Search Suggestions Box -->
+        <div id="search-suggestions" class="suggestions-box"></div>
+      </div>
+    </div>
+
+    <!-- Pokémon Library Display -->
+    <div id="pokemon-library-wrapper">
+      <div id="pokemon-library"></div>
+      <!-- Scroll Sentinel for Infinite Scroll -->
+      <div id="scroll-sentinel"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="fetchPokemonData.js"></script>
+    <script type="module" src="SidePanel.js"></script>
+    <script type="module" src="header.js"></script>
   </body>
 </html>

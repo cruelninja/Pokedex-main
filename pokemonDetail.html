@@ -1,28 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Updated CSP for Security & API Access -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self';
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: https://raw.githubusercontent.com https://pokeapi.co;
-    connect-src 'self' https://pokeapi.co;
-    object-src 'none';
-  ">
+  <!-- Updated CSP to allow data URLs for images -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' 'sha256-m3Mr5bJREEM1QYF4SMsUugsCzSIbmnTkoNu4ys36C20='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com https://pokeapi.co; connect-src 'self' https://pokeapi.co; object-src 'none';">
 
   <title>Pokédex Details</title>
   <link rel="stylesheet" href="detailStyles.css" />
-
-  <!-- Defer JavaScript modules for performance -->
-  <script type="module" src="pokemonDetail.js" defer></script>
-  <script type="module" src="header.js" defer></script>
+  <script type="module" src="PokemonDetail.js" defer></script>
+  <script src="headerNavigation.js" defer></script>
 </head>
+
 <body>
-  <!-- Header: Minimal design, centered logo + title -->
   <header id="header-container" class="pokedex-header" role="banner">
     <div class="header-content">
       <img src="PokeDex.png" alt="Pokédex Logo" class="logo" />
@@ -30,18 +22,9 @@
     </div>
   </header>
 
-  <!-- Main Content: Pokémon Details -->
   <main id="pokemon-info" role="region" aria-label="Pokémon Details">
-    <div class="pokemon-detail-loading">
-      Loading Pokémon...
-    </div>
+    <!-- Pokémon card will be dynamically added here -->
   </main>
-
-  <!-- No JavaScript Warning -->
-  <noscript>
-    <p class="noscript-warning" style="color: red; text-align: center; font-size: 1.2rem;">
-      ⚠️ JavaScript is required for this page to function properly.
-    </p>
-  </noscript>
 </body>
+
 </html>
