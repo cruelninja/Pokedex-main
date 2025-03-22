@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pokéédex",
-  "version": "1.0.8409",
+  "version": "1.0.8410",
   "description": "Displays battle info (stats, evolutions, mega details)",
   "permissions": [
     "activeTab",
