@@ -72,15 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   
   console.log("🚀 SidePanel initialized...");
-
-  // Try loading cached Pokémon data first
-  await loadPokemonDataFromStorage();
-  
-  // Preload full list & names if not already loaded
-  if (!allPokemonData) {
-    await preloadPokemonData();
-  }
-  
+  await preloadPokemonData(); // Preload full list & names.
   setupSearchBar();
   setupGenerationDropdown();
   setupInfiniteScroll();
@@ -102,32 +94,9 @@ function initElementCache() {
     elements[key] = document.querySelector(selectors[key]);
   });
   
+  // Log missing critical elements
   if (!elements.pokemonLibraryWrapper || !elements.pokemonLibrary) {
     console.error("Critical DOM elements missing");
-  }
-}
-
-// Helper: Save detailedPokemonList to chrome.storage.local
-async function savePokemonData() {
-  try {
-    await chrome.storage.local.set({ detailedPokemonList });
-    console.log("✅ Pokémon data saved to storage.");
-  } catch (e) {
-    console.error("❌ Failed to save Pokémon data:", e);
-  }
-}
-
-// Helper: Load detailedPokemonList from chrome.storage.local
-async function loadPokemonDataFromStorage() {
-  try {
-    const result = await chrome.storage.local.get("detailedPokemonList");
-    if (result.detailedPokemonList) {
-      detailedPokemonList = result.detailedPokemonList;
-      console.log("✅ Loaded Pokémon data from storage.");
-      updatePokemonDisplay();
-    }
-  } catch (e) {
-    console.error("❌ Failed to load Pokémon data:", e);
   }
 }
 
@@ -158,6 +127,7 @@ const getPokemonDetail = async (pokemonName, retries = 3) => {
 export async function loadPokemon(retries = 1) {
   if (!elements.pokemonLibrary || isLoading || isGenerationFilterActive || currentSearchQuery) return;
   
+  // Stop if we've loaded all Pokémon.
   if (totalPokemonCount && offset >= totalPokemonCount) {
     console.log("All Pokémon loaded.");
     return;
@@ -172,6 +142,7 @@ export async function loadPokemon(retries = 1) {
   elements.pokemonLibrary.appendChild(loadingIndicator);
   
   try {
+    // FIX: Add a unique timestamp to prevent caching issues
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${MAX_BATCH_SIZE}&_=${Date.now()}`;
     const response = await fetch(url);
     
@@ -188,6 +159,7 @@ export async function loadPokemon(retries = 1) {
     
     const data = await response.json();
     
+    // Set total count if not already set.
     if (!totalPokemonCount) {
       totalPokemonCount = data.count;
       console.log(`Total Pokémon count: ${totalPokemonCount}`);
@@ -196,24 +168,28 @@ export async function loadPokemon(retries = 1) {
     const pokemonBatch = data.results;
     console.log(`Fetched ${pokemonBatch.length} Pokémon from offset ${offset}`);
     
+    // IMPROVEMENT: Use Promise.allSettled instead of Promise.all for better error handling
     const results = await Promise.allSettled(pokemonBatch.map(pokemon => getPokemonDetail(pokemon.name)));
     const validResults = results
       .filter(result => result.status === 'fulfilled' && result.value)
       .map(result => result.value);
     
-    // Avoid duplicates
+    // FIX: Make sure we're not duplicating Pokémon in the list
+    const newPokemonIds = new Set(validResults.map(pokemon => pokemon.id));
     const uniqueNewPokemon = validResults.filter(pokemon => 
       !detailedPokemonList.some(existing => existing.id === pokemon.id)
     );
     
     detailedPokemonList = [...detailedPokemonList, ...uniqueNewPokemon];
+    
+    // Sort by ID to maintain order
     detailedPokemonList.sort((a, b) => a.id - b.id);
     
+    // FIX: Ensure offset is updated correctly
     offset += MAX_BATCH_SIZE;
     console.log(`Updated offset to ${offset}`);
     
     updatePokemonDisplay();
-    await savePokemonData(); // Save after update
   } catch (error) {
     console.error("❌ Error loading Pokémon:", error);
     elements.pokemonLibrary.innerHTML = `<p class="error">Error loading Pokémon. Please try again later.</p>`;
@@ -230,6 +206,7 @@ function setupInfiniteScroll() {
     return;
   }
   
+  // Remove existing sentinel if it exists
   const existingSentinel = document.getElementById("scroll-sentinel");
   if (existingSentinel) existingSentinel.remove();
   
@@ -237,10 +214,12 @@ function setupInfiniteScroll() {
   sentinel.id = "scroll-sentinel";
   elements.pokemonLibraryWrapper.appendChild(sentinel);
   
+  // Disconnect existing observer if it exists
   if (scrollObserver) {
     scrollObserver.disconnect();
   }
   
+  // IMPROVEMENT: More reliable intersection observer settings
   scrollObserver = new IntersectionObserver(
     entries => {
       if (entries[0].isIntersecting && !isLoading && !currentSearchQuery && currentGeneration === "all") {
@@ -255,7 +234,7 @@ function setupInfiniteScroll() {
     },
     { 
       root: elements.pokemonLibraryWrapper, 
-      rootMargin: "200px 0px",
+      rootMargin: "200px 0px",  // Increased margin to load earlier
       threshold: 0.1 
     }
   );
@@ -264,10 +243,11 @@ function setupInfiniteScroll() {
   console.log("✅ Infinite scroll observer set up.");
 }
 
-// Check if content height is insufficient and load more if needed.
+// After updating the display, check if content height is insufficient and load more if needed.
 function checkAndLoadMore() {
   if (!elements.pokemonLibrary || !elements.pokemonLibraryWrapper) return;
   
+  // IMPROVEMENT: More reliable height check
   const contentHeight = elements.pokemonLibrary.scrollHeight;
   const containerHeight = elements.pokemonLibraryWrapper.clientHeight;
   
@@ -280,11 +260,15 @@ function checkAndLoadMore() {
 // Preloads the full Pokémon list and names (cached globally).
 async function preloadPokemonData() {
   try {
+    // IMPROVEMENT: Use a higher limit to get all Pokémon at once
     const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1200");
     if (!response.ok) throw new Error(`Failed to fetch Pokémon data: ${response.status}`);
     
     const data = await response.json();
-    allPokemonData = data.results.map(pokemon => {
+    allPokemonData = data.results;
+    
+    // IMPROVEMENT: Add ID to each Pokémon during preload
+    allPokemonData = allPokemonData.map(pokemon => {
       const urlParts = pokemon.url.split("/");
       const id = parseInt(urlParts[urlParts.length - 2]);
       return { ...pokemon, id };
@@ -304,6 +288,7 @@ function setupSearchBar() {
     return;
   }
   
+  // Clean up any existing event listeners
   const newSearchInput = elements.searchInput.cloneNode(true);
   elements.searchInput.parentNode.replaceChild(newSearchInput, elements.searchInput);
   elements.searchInput = newSearchInput;
@@ -317,13 +302,14 @@ function setupSearchBar() {
   console.log("✅ Search bar set up.");
 }
 
-// Sets up the generation dropdown event.
+// Sets up the generation dropdown event
 function setupGenerationDropdown() {
   if (!elements.generationDropdown) {
     console.error("❌ Generation dropdown not found in side panel.");
     return;
   }
   
+  // Clean up any existing event listeners
   const newDropdown = elements.generationDropdown.cloneNode(true);
   elements.generationDropdown.parentNode.replaceChild(newDropdown, elements.generationDropdown);
   elements.generationDropdown = newDropdown;
@@ -344,11 +330,16 @@ async function filterPokemonByName(query) {
   elements.pokemonLibrary.innerHTML = '<p class="loading">Searching...</p>';
   
   if (!query) {
-    updatePokemonDisplay(currentGeneration === "all" ? detailedPokemonList : applyGenerationFilter(detailedPokemonList));
+    if (currentGeneration === "all") {
+      updatePokemonDisplay(detailedPokemonList);
+    } else {
+      updatePokemonDisplay(applyGenerationFilter(detailedPokemonList));
+    }
     return;
   }
   
   try {
+    // IMPROVEMENT: More efficient search using preloaded data
     if (!window.allPokemonNames.length) {
       await preloadPokemonData();
     }
@@ -360,6 +351,7 @@ async function filterPokemonByName(query) {
       return;
     }
     
+    // IMPROVEMENT: Use Promise.allSettled for better error handling
     const promises = matchingNames.map(name => getPokemonDetail(name));
     const results = await Promise.allSettled(promises);
     
@@ -383,21 +375,31 @@ function updatePokemonDisplay(pokemonList = null, query = "") {
   if (!elements.pokemonLibrary) return;
   
   if (pokemonList === null) {
-    pokemonList = currentSearchQuery
-      ? detailedPokemonList.filter(pokemon => pokemon.name.toLowerCase().includes(currentSearchQuery))
-      : (currentGeneration !== "all" ? applyGenerationFilter(detailedPokemonList) : detailedPokemonList);
+    if (currentSearchQuery) {
+      pokemonList = detailedPokemonList.filter(pokemon => 
+        pokemon.name.toLowerCase().includes(currentSearchQuery)
+      );
+    } else if (currentGeneration !== "all") {
+      pokemonList = applyGenerationFilter(detailedPokemonList);
+    } else {
+      pokemonList = detailedPokemonList;
+    }
     query = currentSearchQuery;
   }
   
   elements.pokemonLibrary.innerHTML = "";
+  
   if (!pokemonList.length) {
     elements.pokemonLibrary.innerHTML = `<p class="no-results">No Pokémon found.</p>`;
     return;
   }
   
+  // IMPROVEMENT: Sort by ID for consistency
   pokemonList.sort((a, b) => a.id - b.id);
   
+  // IMPROVEMENT: Use DocumentFragment for better performance
   const fragment = document.createDocumentFragment();
+  
   pokemonList.forEach(pokemon => {
     if (pokemon && pokemon.id) {
       fragment.appendChild(addPokemonCard(pokemon, query));
@@ -406,7 +408,7 @@ function updatePokemonDisplay(pokemonList = null, query = "") {
   
   elements.pokemonLibrary.appendChild(fragment);
   
-  // Debug info (optional)
+  // Add debug information
   if (currentGeneration === "all" && !currentSearchQuery) {
     const debugInfo = document.createElement("div");
     debugInfo.className = "debug-info";
@@ -423,6 +425,7 @@ function updatePokemonDisplay(pokemonList = null, query = "") {
     if (sentinel) elements.pokemonLibrary.after(sentinel);
   }
   
+  // Check if the loaded content is less than the wrapper height.
   setTimeout(checkAndLoadMore, 100);
 }
 
@@ -443,18 +446,21 @@ function applyGenerationFilter(list) {
 export async function setGeneration(gen) {
   if (!elements.pokemonLibrary) return;
   
+  // Reset state
   detailedPokemonList = [];
   elements.pokemonLibrary.innerHTML = `<p class="loading">Loading Generation ${gen} Pokémon...</p>`;
   currentGeneration = gen;
   isGenerationFilterActive = gen !== "all";
   console.log(`Setting generation filter to: ${gen}`);
   
+  // Clear any active search query.
   if (elements.searchInput) {
     elements.searchInput.value = "";
     currentSearchQuery = "";
   }
   
   if (currentGeneration === "all") {
+    // Reset and load fresh
     offset = 0;
     await loadPokemon();
     return;
@@ -467,6 +473,7 @@ export async function setGeneration(gen) {
   }
   
   try {
+    // Use preloaded data if available
     let pokemonList = allPokemonData;
     if (!pokemonList) {
       await preloadPokemonData();
@@ -483,6 +490,7 @@ export async function setGeneration(gen) {
       
     console.log(`Found ${pokemonInRange.length} Pokémon in Generation ${currentGeneration} range`);
     
+    // IMPROVEMENT: Use Promise.allSettled for better error handling
     const promises = pokemonInRange.map(pokemon => getPokemonDetail(pokemon.name));
     const resultsSettled = await Promise.allSettled(promises);
     
@@ -492,7 +500,10 @@ export async function setGeneration(gen) {
     
     validResults.sort((a, b) => a.id - b.id);
     
-    detailedPokemonList = prioritizeStarters(validResults, generationStarters[currentGeneration] || []);
+    detailedPokemonList = prioritizeStarters(
+      validResults, 
+      generationStarters[currentGeneration] || []
+    );
     
     updatePokemonDisplay();
   } catch (error) {
@@ -535,7 +546,7 @@ export function addPokemonCard(data, query = "") {
   infoContainer.className = "pokemon-info";
   
   const img = document.createElement("img");
-  img.loading = "lazy";
+  img.loading = "lazy"; // IMPROVEMENT: Add lazy loading
   img.src = data.sprites?.front_default || "default-sprite.png";
   img.alt = data.name;
   img.className = "pokemon-sprite";
@@ -543,10 +554,12 @@ export function addPokemonCard(data, query = "") {
   const nameContainer = document.createElement("div");
   nameContainer.className = "pokemon-name-container";
   
+  // Process name
   const formattedName = data.name
     .split("-")
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join("-");
+  
   let displayName = formattedName;
   if (query) {
     const regex = new RegExp(`(${query})`, "gi");
@@ -567,21 +580,24 @@ export function addPokemonCard(data, query = "") {
   
   const typesContainer = document.createElement("div");
   typesContainer.className = "pokemon-types";
-  data.types?.forEach(({ type }) => {
-    if (type && type.name) {
-      const typeSpan = document.createElement("span");
-      const typeName = type.name;
-      typeSpan.textContent = typeName.charAt(0).toUpperCase() + typeName.slice(1);
-      typeSpan.classList.add("type-" + typeName.toLowerCase());
-      typesContainer.appendChild(typeSpan);
-    }
-  });
   
+  if (data.types && Array.isArray(data.types)) {
+    data.types.forEach(({ type }) => {
+      if (type && type.name) {
+        const typeSpan = document.createElement("span");
+        const typeName = type.name;
+        typeSpan.textContent = typeName.charAt(0).toUpperCase() + typeName.slice(1);
+        typeSpan.classList.add("type-" + typeName.toLowerCase());
+        typesContainer.appendChild(typeSpan);
+      }
+    });
+  }
+  
+  // Build card structure:
   const spriteContainer = document.createElement("div");
   spriteContainer.className = "pokemon-sprite-container";
   spriteContainer.appendChild(img);
   
-  // Assemble card: sprite container (left), info container (center), types container (bottom)
   card.appendChild(spriteContainer);
   card.appendChild(infoContainer);
   card.appendChild(typesContainer);
