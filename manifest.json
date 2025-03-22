@@ -13,6 +13,7 @@
   ],
   "host_permissions": [
     "https://pokerogue.net/*",
+    "https://pokemonrouge.net/*",
     "https://pokeapi.co/*",
     "https://raw.githubusercontent.com/*"
   ],
@@ -40,7 +41,8 @@
   "content_scripts": [
     {
       "matches": [
-        "https://pokerogue.net/*"
+        "https://pokerogue.net/*",
+        "https://pokemonrouge.net/*"
       ],
       "js": [
         "contentScript.js"

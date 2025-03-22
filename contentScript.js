@@ -1,6 +1,6 @@
 console.log("✅ contentScript.js loaded successfully.");
 
-// Insert a confirmation message at the bottom of the page
+// Insert a confirmation message (optional)
 document.body.insertAdjacentHTML(
   'beforeend',
   '<p style="position:fixed;bottom:0;left:0;background:black;color:white;padding:5px;z-index:1000;">Pokédex Extension Active</p>'
