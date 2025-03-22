@@ -43,8 +43,7 @@
         "https://pokerogue.net/*"
       ],
       "js": [
-        "contentScript.js",
-        "autoOpen.js"
+        "contentScript.js"
       ],
       "css": [
         "styles.css"
