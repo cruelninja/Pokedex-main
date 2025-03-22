@@ -9,7 +9,6 @@ Welcome to Pokédex Main, your go-to browser extension for all things Pokémon! 
 ## What It Does
   - Search Pokémon: Find any Pokémon by name or ID.
   - Detailed Info: Get stats, abilities, types, and evolution chains.
-  - Weaknesses & Resistances: Know what works (and what doesn’t) in battles.
   - Real-Time Data: Powered by PokeAPI for accurate and up-to-date information.
 
 ## Why Use This?
